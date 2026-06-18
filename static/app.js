@@ -39,8 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Export to CSV handler
     exportCsvBtn.addEventListener('click', () => {
-        const url = `/api/releases/export?query=${encodeURIComponent(searchQuery)}&type=${encodeURIComponent(currentFilterType)}`;
-        window.location.href = url;
+        const url = `/api/releases/bigquery_releases.csv?query=${encodeURIComponent(searchQuery)}&type=${encodeURIComponent(currentFilterType)}`;
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "bigquery_releases.csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 
     // Search input handler (with debounce/immediate feedback)

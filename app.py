@@ -116,7 +116,7 @@ def get_releases():
         return jsonify(data), 500
     return jsonify(data)
 
-@app.route("/api/releases/export")
+@app.route("/api/releases/bigquery_releases.csv")
 def export_releases():
     data = parse_release_notes()
     if "error" in data:
