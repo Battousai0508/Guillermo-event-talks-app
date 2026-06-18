@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('error-message');
     const retryBtn = document.getElementById('retry-btn');
     const feedList = document.getElementById('feed-list');
+    const exportCsvBtn = document.getElementById('export-csv-btn');
     
     // Tweet Modal Elements
     const tweetModal = document.getElementById('tweet-modal');
@@ -35,6 +36,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listeners
     refreshBtn.addEventListener('click', fetchReleases);
     retryBtn.addEventListener('click', fetchReleases);
+
+    // Export to CSV handler
+    exportCsvBtn.addEventListener('click', () => {
+        // Gather current filtered items
+        const itemsToExport = allReleaseItems.filter(item => {
+            const matchesFilter = currentFilterType === 'all' || item.type === currentFilterType;
+            const matchesSearch = !searchQuery || 
+                                  item.text.toLowerCase().includes(searchQuery) || 
+                                  item.date.toLowerCase().includes(searchQuery) ||
+                                  item.type.toLowerCase().includes(searchQuery);
+            return matchesFilter && matchesSearch;
+        });
+        
+        if (itemsToExport.length === 0) return;
+        
+        // Build CSV rows
+        const csvRows = [];
+        csvRows.push(['Date', 'Category', 'Update Text', 'Link']);
+        
+        itemsToExport.forEach(item => {
+            csvRows.push([item.date, item.type, item.text, item.link]);
+        });
+        
+        // Formats as CSV, escaping quotes and surrounding fields in double quotes
+        const csvString = csvRows.map(row => 
+            row.map(value => `"${(value || '').toString().replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+        
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `bigquery_releases_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    });
 
     // Search input handler (with debounce/immediate feedback)
     searchInput.addEventListener('input', (e) => {
@@ -103,10 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
             processRawEntries(data.entries || []);
             renderFeed();
             showLoading(false);
+            exportCsvBtn.disabled = false;
         } catch (error) {
             console.error('Error fetching release notes:', error);
             errorMessage.textContent = error.message || 'Could not load release notes. Check backend connectivity.';
             showError(true);
+            exportCsvBtn.disabled = true;
         }
     }
 
@@ -289,6 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="badge ${badgeClass}">${label}</span>
                     <div class="action-btns">
                         ${item.link ? `<a href="${item.link}" target="_blank" class="btn-icon" title="View official docs"><i data-lucide="external-link"></i></a>` : ''}
+                        <button class="btn-icon copy-btn" title="Copiar al portapapeles">
+                            <i data-lucide="copy"></i>
+                        </button>
                         <button class="btn-icon tweet-btn" title="Tweet this update">
                             <i data-lucide="twitter"></i>
                         </button>
@@ -306,6 +350,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     const truncatedText = cleanText.substring(0, 180) + (cleanText.length > 180 ? '...' : '');
                     const tweetContent = `BigQuery Release (${item.date}): ${truncatedText} ${item.link ? '\nRead more: ' + item.link : ''}\n#BigQuery #GCP`;
                     openTweetModal(tweetContent);
+                });
+
+                // Add event listener to Copy button
+                const copyButton = cardHeader.querySelector('.copy-btn');
+                copyButton.addEventListener('click', () => {
+                    navigator.clipboard.writeText(item.text).then(() => {
+                        // Change icon to check for visual feedback
+                        copyButton.innerHTML = '<i data-lucide="check" style="color: var(--accent-teal)"></i>';
+                        if (window.lucide) window.lucide.createIcons();
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<i data-lucide="copy"></i>';
+                            if (window.lucide) window.lucide.createIcons();
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
                 });
 
                 card.appendChild(cardHeader);
