@@ -14,6 +14,88 @@
     --transition-speed: 0.3s;
 }
 
+body.light-mode {
+    --bg-color: #f3f4f6;
+    --text-color: #1f2937;
+    --text-muted: #4b5563;
+    --primary-color: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.1);
+    --accent-teal: #0d9488;
+    --accent-gold: #d97706;
+    --accent-rose: #e11d48;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --card-hover-bg: rgba(243, 244, 246, 0.85);
+}
+
+body.light-mode .circle-blob {
+    opacity: 0.1;
+}
+
+body.light-mode .logo-area h1 {
+    background: linear-gradient(135deg, #1f2937 50%, #4f46e5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .search-box input {
+    background: rgba(0, 0, 0, 0.02);
+    color: #1f2937;
+}
+
+body.light-mode .search-box input:focus {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-mode .group-date {
+    color: #1f2937;
+}
+
+body.light-mode #tweet-modal .modal-content {
+    background: #ffffff;
+    color: #1f2937;
+}
+
+body.light-mode .tweet-card-preview {
+    background: #f9fafb;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode #tweet-textarea {
+    color: #1f2937;
+}
+
+body.light-mode .btn-secondary {
+    background: rgba(0, 0, 0, 0.02);
+    color: #1f2937;
+}
+
+body.light-mode .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .btn-icon {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-mode .btn-icon:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111827;
+}
+
+body.light-mode .release-date-group {
+    border-left-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .card-content {
+    color: #374151;
+}
+
+body.light-mode .card-content a {
+    color: #4f46e5;
+}
+
+
 * {
     box-sizing: border-box;
     margin: 0;

@@ -10,6 +10,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const retryBtn = document.getElementById('retry-btn');
     const feedList = document.getElementById('feed-list');
     const exportCsvBtn = document.getElementById('export-csv-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    // Theme initialization
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-mode');
+        themeIcon.setAttribute('data-lucide', 'moon');
+    }
+
+    // Theme Toggle Handler
+    themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    });
     
     // Tweet Modal Elements
     const tweetModal = document.getElementById('tweet-modal');
