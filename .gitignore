@@ -1,0 +1,32 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+ENV/
+bin/
+include/
+lib/
+share/
+pyvenv.cfg
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Flask environment configuration
+.env
+.flaskenv
+
+# IDE and Project workspace config
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Radar</title>
+    <meta name="description" content="Stay up to date with BigQuery release notes and easily tweet updates.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="circle-blob blob-1"></div>
+    <div class="circle-blob blob-2"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i data-lucide="database" class="glow-icon"></i>
+                </div>
+                <div>
+                    <h1>BigQuery Release Radar</h1>
+                    <p class="subtitle">Real-time Google Cloud BigQuery Updates</p>
+                </div>
+            </div>
+            
+            <div class="actions-area">
+                <button id="refresh-btn" class="btn btn-primary" title="Refresh Release Notes">
+                    <i data-lucide="refresh-cw" id="refresh-icon"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats / Overview Bar -->
+        <div class="overview-bar">
+            <div class="search-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search updates (e.g. autonomous, embeddings, export)...">
+            </div>
+            <div class="filter-pills">
+                <button class="pill active" data-type="all">All</button>
+                <button class="pill" data-type="feature">Features</button>
+                <button class="pill" data-type="changed">Changes</button>
+                <button class="pill" data-type="deprecated">Deprecated</button>
+                <button class="pill" data-type="other">Other</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="feed-container">
+            <div id="loading-state" class="loading-state">
+                <div class="spinner"></div>
+                <p>Syncing latest BigQuery updates...</p>
+            </div>
+
+            <div id="error-state" class="error-state hidden">
+                <i data-lucide="alert-triangle" class="error-icon"></i>
+                <h3>Sync Failed</h3>
+                <p id="error-message">Could not fetch the latest release notes.</p>
+                <button id="retry-btn" class="btn btn-secondary">Try Again</button>
+            </div>
+
+            <div id="feed-list" class="feed-list hidden">
+                <!-- Dynamically populated -->
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>BigQuery Release Radar &bull; Click any update to customize and share on X (Twitter).</p>
+        </footer>
+    </div>
+
+    <!-- Tweet Customizer Modal -->
+    <div id="tweet-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="twitter" class="twitter-blue-icon"></i> Draft Tweet</h3>
+                <button id="close-modal-btn" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tweet-card-preview">
+                    <div class="twitter-user-header">
+                        <div class="avatar-placeholder">BQ</div>
+                        <div>
+                            <span class="user-display-name">Cloud Explorer</span>
+                            <span class="user-handle">@cloud_radar</span>
+                        </div>
+                    </div>
+                    <textarea id="tweet-textarea" rows="5" maxlength="280" placeholder="What's happening?"></textarea>
+                    <div class="tweet-counter-area">
+                        <span id="char-counter">280</span> characters remaining
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-tweet-btn" class="btn btn-secondary">Cancel</button>
+                <button id="send-tweet-btn" class="btn btn-twitter">
+                    <i data-lucide="send"></i>
+                    <span>Tweet / Post</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Tweet Button for text selection -->
+    <button id="floating-tweet-btn" class="floating-tweet-btn hidden">
+        <i data-lucide="twitter"></i> Tweet selection
+    </button>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
