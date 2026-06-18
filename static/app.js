@@ -39,40 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Export to CSV handler
     exportCsvBtn.addEventListener('click', () => {
-        // Gather current filtered items
-        const itemsToExport = allReleaseItems.filter(item => {
-            const matchesFilter = currentFilterType === 'all' || item.type === currentFilterType;
-            const matchesSearch = !searchQuery || 
-                                  item.text.toLowerCase().includes(searchQuery) || 
-                                  item.date.toLowerCase().includes(searchQuery) ||
-                                  item.type.toLowerCase().includes(searchQuery);
-            return matchesFilter && matchesSearch;
-        });
-        
-        if (itemsToExport.length === 0) return;
-        
-        // Build CSV rows
-        const csvRows = [];
-        csvRows.push(['Date', 'Category', 'Update Text', 'Link']);
-        
-        itemsToExport.forEach(item => {
-            csvRows.push([item.date, item.type, item.text, item.link]);
-        });
-        
-        // Formats as CSV, escaping quotes and surrounding fields in double quotes
-        const csvString = csvRows.map(row => 
-            row.map(value => `"${(value || '').toString().replace(/"/g, '""')}"`).join(',')
-        ).join('\n');
-        
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `bigquery_releases_${new Date().toISOString().slice(0,10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        const url = `/api/releases/export?query=${encodeURIComponent(searchQuery)}&type=${encodeURIComponent(currentFilterType)}`;
+        window.location.href = url;
     });
 
     // Search input handler (with debounce/immediate feedback)
