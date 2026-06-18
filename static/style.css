@@ -746,3 +746,76 @@ body {
         justify-content: flex-end;
     }
 }
+
+/* UX Enhancements */
+.last-sync-time {
+    font-size: 0.725rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    font-weight: 500;
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-speed);
+}
+
+.clear-search-btn:hover {
+    color: white;
+}
+
+body.light-mode .clear-search-btn:hover {
+    color: #1f2937;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 1000;
+}
+
+.toast {
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+body.light-mode .toast {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1f2937;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+

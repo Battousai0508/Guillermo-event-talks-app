@@ -29,6 +29,7 @@
                 <div>
                     <h1>BigQuery Release Radar</h1>
                     <p class="subtitle">Real-time Google Cloud BigQuery Updates</p>
+                    <p id="last-sync-time" class="last-sync-time">Sincronizando...</p>
                 </div>
             </div>
             
@@ -52,6 +53,7 @@
             <div class="search-box">
                 <i data-lucide="search" class="search-icon"></i>
                 <input type="text" id="search-input" placeholder="Search updates (e.g. autonomous, embeddings, export)...">
+                <button id="clear-search-btn" class="clear-search-btn hidden" title="Limpiar búsqueda">&times;</button>
             </div>
             <div class="filter-pills">
                 <button class="pill active" data-type="all">All</button>
@@ -123,6 +125,8 @@
     <button id="floating-tweet-btn" class="floating-tweet-btn hidden">
         <i data-lucide="twitter"></i> Tweet selection
     </button>
+
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>

@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportCsvBtn = document.getElementById('export-csv-btn');
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeIcon = document.getElementById('theme-icon');
+    const clearSearchBtn = document.getElementById('clear-search-btn');
+    const lastSyncTimeEl = document.getElementById('last-sync-time');
     
     // Theme initialization
     const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -67,12 +69,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        showToast('Descargando archivo CSV...', 'download');
     });
 
     // Search input handler (with debounce/immediate feedback)
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.toLowerCase().trim();
+        if (searchQuery) {
+            clearSearchBtn.classList.remove('hidden');
+        } else {
+            clearSearchBtn.classList.add('hidden');
+        }
         renderFeed();
+    });
+
+    // Clear search handler
+    clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        renderFeed();
+        searchInput.focus();
     });
 
     // Filter pill handlers
@@ -137,6 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
             renderFeed();
             showLoading(false);
             exportCsvBtn.disabled = false;
+            
+            const now = new Date();
+            lastSyncTimeEl.textContent = `Última sincronización: ${now.toLocaleTimeString()}`;
+            showToast('Feed actualizado con éxito', 'check');
         } catch (error) {
             console.error('Error fetching release notes:', error);
             errorMessage.textContent = error.message || 'Could not load release notes. Check backend connectivity.';
@@ -353,12 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Change icon to check for visual feedback
                         copyButton.innerHTML = '<i data-lucide="check" style="color: var(--accent-teal)"></i>';
                         if (window.lucide) window.lucide.createIcons();
+                        showToast('Copiado al portapapeles', 'clipboard');
                         setTimeout(() => {
                             copyButton.innerHTML = '<i data-lucide="copy"></i>';
                             if (window.lucide) window.lucide.createIcons();
                         }, 2000);
                     }).catch(err => {
                         console.error('Failed to copy text: ', err);
+                        showToast('Error al copiar texto', 'alert-circle');
                     });
                 });
 
@@ -420,5 +443,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 floatingTweetBtn.classList.add('hidden');
             }
         }, 100);
+    }
+
+    // Floating Notification (Toast) System
+    function showToast(message, iconName = 'info') {
+        const container = document.getElementById('toast-container') || createToastContainer();
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i data-lucide="${iconName}" style="width: 1.1rem; height: 1.1rem;"></i> <span>${message}</span>`;
+        container.appendChild(toast);
+        
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+        
+        // Trigger reflow to enable animation
+        toast.offsetHeight;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    function createToastContainer() {
+        const container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+        return container;
     }
 });
