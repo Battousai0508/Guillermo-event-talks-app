@@ -152,7 +152,7 @@ def export_releases():
         cw.writerow([item["date"], item["type"], item["text"], item["link"]])
         
     output = make_response(si.getvalue())
-    output.headers["Content-Disposition"] = "inline; filename=bigquery_releases.csv"
+    output.headers["Content-Disposition"] = 'attachment; filename="bigquery_releases.csv"'
     output.headers["Content-Type"] = "text/csv; charset=utf-8"
     return output
 
